@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: android-build-${{ github.ref }}
@@ -33,10 +33,42 @@ jobs:
       - name: Lint and build APK
         run: ./gradlew lintDebug assembleDebug --stacktrace
 
+      - name: Prepare APK
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/jev-chat-jarvis-dev.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           name: jev-chat-jarvis-debug-${{ github.run_number }}-${{ github.run_attempt }}
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: dist/jev-chat-jarvis-dev.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish rolling dev release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: dev-latest
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/git/refs/tags/${RELEASE_TAG}" \
+              -f sha="${GITHUB_SHA}" -F force=true --silent
+          else
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/git/refs" \
+              -f ref="refs/tags/${RELEASE_TAG}" -f sha="${GITHUB_SHA}" --silent
+          fi
+
+          release_notes="由 dev 分支自动构建。Commit: ${GITHUB_SHA}"
+          if gh release view "${RELEASE_TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release edit "${RELEASE_TAG}" --repo "${GITHUB_REPOSITORY}" \
+              --target "${GITHUB_SHA}" --title "Dev 最新构建" \
+              --notes "${release_notes}" --prerelease
+            gh release upload "${RELEASE_TAG}" dist/jev-chat-jarvis-dev.apk \
+              --repo "${GITHUB_REPOSITORY}" --clobber
+          else
+            gh release create "${RELEASE_TAG}" dist/jev-chat-jarvis-dev.apk \
+              --repo "${GITHUB_REPOSITORY}" --verify-tag --prerelease \
+              --title "Dev 最新构建" --notes "${release_notes}"
+          fi
