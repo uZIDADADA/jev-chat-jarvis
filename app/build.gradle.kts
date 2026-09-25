@@ -1,5 +1,6 @@
 import java.io.FileInputStream
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -7,11 +8,22 @@ plugins {
 }
 
 // Release signing: reads a properties file kept OUTSIDE the repo
-// (storeFile / storePassword / keyAlias / keyPassword). Override the path with
-// the JEV_KEYSTORE_PROPS env var. Without it, release builds are unsigned.
+// (storeFile / storePassword / keyAlias / keyPassword). Set its path with
+// JEV_KEYSTORE_PROPS. Without the variable, release builds are unsigned.
+// Do not provide a machine-specific default here: even debug/lint configuration
+// must work on Windows, macOS, and Linux.
+val releasePropsFile = System.getenv("JEV_KEYSTORE_PROPS")
+    ?.trim()
+    ?.takeIf { it.isNotEmpty() }
+    ?.let(::file)
+
 val releaseProps = Properties().apply {
-    val f = file(System.getenv("JEV_KEYSTORE_PROPS") ?: "H:/android/keys/jev-release.properties")
-    if (f.exists()) FileInputStream(f).use { load(it) }
+    releasePropsFile?.let { f ->
+        require(f.isFile) {
+            "JEV_KEYSTORE_PROPS does not point to a readable file: ${f.absolutePath}"
+        }
+        FileInputStream(f).use { load(it) }
+    }
 }
 
 android {
@@ -65,8 +77,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
 }
 
