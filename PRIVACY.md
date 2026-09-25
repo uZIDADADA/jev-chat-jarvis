@@ -2,7 +2,7 @@
 
 **Jev 聊天助手在你的设备上读取你正在看的聊天，把内容发给你自己配置的模型接口做判断和起草回复。作者不运营服务器，收不到你的任何数据。**
 
-版本 v1.0，生效日期 2026-09-23。适用范围：Android 端 [jev-chat-jarvis](https://github.com/jev-chat/jev-chat-jarvis)。Windows 版（[jev-chat-windows](https://github.com/jev-chat/jev-chat-windows)）与 macOS 版（[jev-chat-jarvis-mac](https://github.com/jev-chat/jev-chat-jarvis-mac)）是各自独立的仓库和安装包，不在本政策范围内，请分别查看它们自己的说明。
+版本 v1.0，生效日期 2026-09-23。适用范围：本仓库 `dev` 分支构建的 Android 应用：[uZIDADADA/jev-chat-jarvis](https://github.com/uZIDADADA/jev-chat-jarvis)。
 
 如果你更习惯先看结论：本项目**不是**"零数据收集"产品——它确实会把你正在看的聊天文字发给一个第三方模型接口，但那个接口地址是你自己在设置里填的，不是作者的服务器。除此之外的数据只留在你手机里，删应用或点一键清空都能删干净。下面逐项说清楚"发了什么、发给谁、什么时候发、存在哪、怎么删"。
 
@@ -72,7 +72,7 @@ API 密钥会作为请求头（`Authorization`）随对应请求发给你自己�
 - 只处理你自己设备上、你自己有权查看的聊天，不处理其它人的设备。
 - 无广告、无第三方分析或统计 SDK（不含 Google Analytics、Firebase、友盟等）、不使用 Cookie 或广告标识符。
 - 作者不运营任何服务器，不接收、不留存、不出售、不用于训练任何模型你的聊天内容——因为这些内容压根不经过作者。
-- 开源：以上每一条说法，都可以在 GitHub 仓库里对照源码核实：https://github.com/jev-chat/jev-chat-jarvis
+- 开源：以上每一条说法，都可以在 GitHub 仓库里对照源码核实：https://github.com/uZIDADADA/jev-chat-jarvis
 
 ## 6. 你的控制权
 
@@ -93,12 +93,11 @@ API 密钥会作为请求头（`Authorization`）随对应请求发给你自己�
 
 ## 9. 变更
 
-本政策如有修改，会同步更新本文件（GitHub 仓库）与官网 https://chatjevs.com/privacy.html 上的版本；涉及数据处理方式的重大变更，会在对应版本的发布说明（Release Notes / CHANGELOG）中提示。建议以仓库中的最新版本为准。
+本政策如有修改，会更新本仓库中的 `PRIVACY.md`；涉及数据处理方式的重大变更，会在对应版本的发布说明中提示。建议以 `dev` 分支中的最新版本为准。
 
 ## 10. 联系
 
-- GitHub Issues：https://github.com/jev-chat/jev-chat-jarvis/issues
-- 公众号私信（二维码见仓库 README）
+- GitHub Issues：https://github.com/uZIDADADA/jev-chat-jarvis/issues
 
 ---
 
@@ -112,7 +111,7 @@ Jev Chat Assistant (Android) reads the chat you are currently viewing on your de
 - **Local-only storage**: API keys, endpoint settings, knowledge-base notes/contacts, and (if enabled) per-contact chat history live only in the app's private storage on your device. Nothing syncs to the cloud. Uninstalling the app deletes all of it; a one-tap "clear knowledge base & history" option is also available.
 - **No ads, no third-party analytics SDKs (no Google Analytics, Firebase, etc.), no cookies or advertising identifiers.**
 - The app never sends messages automatically — you always press send yourself — and it never touches money transfers, red packets, or payments.
-- The project is open source; every claim above can be verified against the source at https://github.com/jev-chat/jev-chat-jarvis.
+- The project is open source; every claim above can be verified against the source at https://github.com/uZIDADADA/jev-chat-jarvis.
 - Third-party model providers you choose to use are governed by their own privacy policies, which you should review separately.
 
 Version 1.0, effective 2026-09-23. Scope: Android app only.

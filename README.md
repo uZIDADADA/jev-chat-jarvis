@@ -2,43 +2,15 @@
 
 <img src="docs/images/logo.png" width="150" alt="Jev 聊天助手" />
 
-# Jev 聊天助手
+# Jev 聊天助手（个人维护版）
 
 **装在手机上的「对话副驾」：在支持的聊天 App 里读懂对方、告诉你该怎么回，一键填进输入框，发不发由你。**
 
-[![Stars](https://img.shields.io/github/stars/jev-chat/jev-chat-jarvis?style=flat-square&logo=github&label=Stars)](https://github.com/jev-chat/jev-chat-jarvis/stargazers)
-[![Forks](https://img.shields.io/github/forks/jev-chat/jev-chat-jarvis?style=flat-square&logo=github&label=Forks)](https://github.com/jev-chat/jev-chat-jarvis/forks)
-[![Version](https://img.shields.io/badge/%E7%89%88%E6%9C%AC-v1.4-1f6feb?style=flat-square)](CHANGELOG.md)
-[![Android](https://img.shields.io/badge/Android-11%2B-3DDC84?style=flat-square&logo=android&logoColor=white)](#快速开始)
-[![License](https://img.shields.io/github/license/jev-chat/jev-chat-jarvis?style=flat-square)](LICENSE)
-
-[官网](https://chatjevs.com) · [隐私政策](PRIVACY.md) · [下载 APK](apk/jev-assistant-v1.4-release.apk) · [历史版本](https://github.com/jev-chat/jev-chat-jarvis/releases) · [更新日志](CHANGELOG.md) · [macOS 版](https://github.com/jev-chat/jev-chat-jarvis-mac) · [Windows 版](https://github.com/jev-chat/jev-chat-windows)
+[隐私政策](PRIVACY.md) · [构建说明](#构建与目录结构) · [上游项目](https://github.com/jev-chat/jev-chat-jarvis)
 
 </div>
 
-## ❤️赞助商
-
-> [想出现在这里？](#交流群--需求收集)
-
-<details open>
-<summary>点击折叠</summary>
-
-<table>
-<tr>
-<td width="240" align="center"><a href="https://open.bocha.cn"><img src="docs/images/sponsors/bocha.png" alt="博查" width="200"></a></td>
-<td>感谢 <b>博查</b> 赞助了本项目！博查是一个给 AI 用的搜索引擎，让你的 AI 应用连接世界知识，获得干净、准确、高质量的搜索结果。提供 Web Search API、Bocha Jev API 等多种联网搜索和模型服务。<a href="https://open.bocha.cn">open.bocha.cn</a></td>
-</tr>
-<tr>
-<td width="240" align="center"><a href="https://faka.rainlanguage.top"><img src="docs/images/sponsors/xiaoyou.png" alt="小优店铺" width="200"></a></td>
-<td>感谢 <b>小优店铺</b> 赞助了本项目！小优店铺是一家数字商品与账号服务店铺，为本项目的用户提供选购渠道。<a href="https://faka.rainlanguage.top">点此前往</a>。</td>
-</tr>
-<tr>
-<td width="240" align="center"><a href="https://agent.ai-tools.cn"><img src="docs/images/sponsors/vytal.jpg" alt="速创猫 Vytal" width="200"></a></td>
-<td>感谢 <b>速创猫 Vytal</b> 赞助了本项目！速创猫 Vytal 是专业的 AI 视频工作流平台，提供可批量复用的视频工作流，降低内容制作门槛，服务内容创作者、培训机构及中小团队。<a href="https://agent.ai-tools.cn">点此前往</a>。</td>
-</tr>
-</table>
-
-</details>
+这是从上游项目派生的个人维护分支，目标是保留核心功能与必要文档，移除赞助推广、社群导流、友情链接和带营销性质的接口入口。`main` 用于跟随上游，日常开发在 `dev` 进行。
 
 ## 截图
 
@@ -73,10 +45,11 @@
 
 ## 快速开始
 
-**1. 装包。** 仓库里有签好名的 release 包：[`apk/jev-assistant-v1.4-release.apk`](apk/jev-assistant-v1.4-release.apk)（Android 11+，仅支持 ARM64 / `arm64-v8a`）。各版本安装包也在 [Releases](https://github.com/jev-chat/jev-chat-jarvis/releases)。
+**1. 从源码构建。** 需要 JDK 17 与 Android SDK 35。当前个人维护版不直接复用上游预编译 APK，避免二进制内容与本分支源码不一致。
 
 ```bash
-adb install -r apk/jev-assistant-v1.4-release.apk
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
 **2. 填密钥。** 打开 App → 设置 →「接口」分三张卡：判断接口 / 回复接口 / 视觉接口。最简单只填「判断接口」一栏的 [OpenRouter](https://openrouter.ai/) API Key，其余两栏留空会自动继承这把密钥就能用。想换回复模型（默认 `deepseek/deepseek-chat-v3.1`，国内 Gemini / OpenAI 会被区域限制）就在「回复接口」选预设（OpenRouter / DeepSeek 官方 / 通义兼容）或自填地址，每张卡都有独立的一键连通测试。
@@ -87,7 +60,7 @@ adb install -r apk/jev-assistant-v1.4-release.apk
 - 悬浮窗 / 显示在其他应用上层（展示分析）
 - 自启动 + 省电无限制（小米 / HyperOS 必做，否则后台被冻结读不到消息）
 
-装过 debug 包的要先卸载再装 release（签名不同），卸载会清掉密钥和设置。小米 / HyperOS 重装后悬浮窗权限会被重置，装完按向导再开一次。
+如果设备上已安装不同签名的版本，需要先卸载旧版；卸载会清掉密钥和设置。小米 / HyperOS 重装后悬浮窗权限会被重置，装完按向导再开一次。
 
 ## 功能
 
@@ -110,10 +83,9 @@ adb install -r apk/jev-assistant-v1.4-release.apk
 ### 接口与模型
 
 - 判断 / 回复 / 视觉三路的地址、密钥、模型分别可填。
-- 判断接口新增内置预设「博查 Jev」，排在选项第二（OpenRouter / 博查 Jev / TypeSafe 直连 / Vercel / OpenCode Zen / 自定义），选中后自动填好服务地址 `https://jev.bocha.cn` 与模型 `bocha-jev-v1`（协议与 TypeSafe 一致），页面上会显示官方地址并支持一键复制，当前限时免费。全新安装默认使用 OpenRouter；已经配置过判断接口的老用户不受影响，provider 和密钥都不会被改动。
-- 判断接口另有「Vercel」预设：地址 `https://ai-gateway.vercel.sh/typesafe`，模型 `typesafe-ai/jev`，密钥用 [Vercel AI Gateway](https://vercel.com/ai-gateway/models/jev) 的 key。协议与 TypeSafe 直连相同（`POST /v1/systemone`）。
-- 判断接口另有「OpenCode Zen」预设：地址 `https://opencode.ai/zen`，模型 `jev-1.13`（输出免费、输入 $0.042/M，一次判断约 1000 输入 token），密钥用 [OpenCode Zen](https://opencode.ai/zen) 的 key。协议与 TypeSafe 直连相同（`POST /v1/systemone`）；想全免费可手动改成 `jev-1.13-free`（限时，功能受限）。
-- 内置 OpenRouter、博查 Jev、TypeSafe 直连、Vercel、OpenCode Zen、DeepSeek 官方、通义兼容预设，每张卡一键连通测试。
+- 判断接口保留 OpenRouter、TypeSafe 直连、Vercel、OpenCode Zen 与自定义端点；回复和视觉接口保留 OpenRouter、DeepSeek、通义兼容与自定义端点。
+- 所有预设只负责填入公开的服务地址和默认模型，不包含推广区、价格文案或密钥领取入口。
+- 每张接口卡都可以独立测试连通性。
 - 只有一把密钥也能用：回复、视觉留空自动继承判断接口的配置。
 - 从旧版本升级时，原来那把密钥会一次性迁移到新的三卡结构。
 
@@ -223,7 +195,7 @@ JDK 17 + Android SDK（platform 35 / build-tools 35）。
   - `KnowledgeActivity` 知识库管理页（笔记 / 联系人）
 - `tools/jev/` — Jev 题目集与校准脚手架（Python）
 - `docs/` — 设计与验收文档
-- `apk/` — 签好名的 release 包
+- 本分支不保存预编译 APK；构建产物位于 `app/build/outputs/apk/`
 
 </details>
 
@@ -240,48 +212,9 @@ JDK 17 + Android SDK（platform 35 / build-tools 35）。
 - **包体变大**：ML Kit 中文离线模型让 APK 从约 12 MB 增至约 27 MB，且只打 arm64-v8a。
 - **微信 Android 版已全面下架**：当前版本不再采集、OCR、分析或填入微信内容。
 
-## 交流群 / 需求收集
+## 项目来源
 
-**如需联系，请公众号私信。** 合作、赞助、反馈、进群失败、二维码过期，都走公众号私信，其它渠道不一定看得到。
-
-<p align="center"><img src="docs/images/mp-qr.png" width="180" alt="公众号二维码" /></p>
-
-想听真实需求：你在哪个聊天 App 上最想要这个副驾？希望它判断什么、怎么提示、什么绝对不能碰？公众号私信直接说。
-
-<details>
-<summary>点击展开交流群二维码（都已满或已过期，进群请公众号私信要新码）</summary>
-
-<table align="center"><tr>
-  <td align="center"><img src="docs/images/group-1.png" width="80" alt="1 群" /><br/><sub>1 群</sub></td>
-  <td align="center"><img src="docs/images/group-2.png" width="80" alt="2 群" /><br/><sub>2 群</sub></td>
-  <td align="center"><img src="docs/images/group-3.png" width="80" alt="3 群" /><br/><sub>3 群</sub></td>
-  <td align="center"><img src="docs/images/group-4.png" width="80" alt="4 群" /><br/><sub>4 群</sub></td>
-  <td align="center"><img src="docs/images/group-5.png" width="80" alt="5 群" /><br/><sub>5 群</sub></td>
-  <td align="center"><img src="docs/images/group-6.png" width="80" alt="6 群" /><br/><sub>6 群</sub></td>
-  <td align="center"><img src="docs/images/group-7.png" width="80" alt="7 群" /><br/><sub>7 群</sub></td>
-  <td align="center"><img src="docs/images/group-8.png" width="80" alt="8 群" /><br/><sub>8 群</sub></td>
-  <td align="center"><img src="docs/images/group-9.png" width="80" alt="9 群" /><br/><sub>9 群</sub></td>
-</tr></table>
-
-</details>
-
-## 姊妹项目
-
-同在 [jev-chat](https://github.com/jev-chat) 组织下：
-
-- [Jev 聊天助手 macOS 版](https://github.com/jev-chat/jev-chat-jarvis-mac)：消息意图识别悬浮窗，看屏 + 本地小模型判断意图和风险，再按话术生成回复候选，纯只读。
-- [Jev 聊天助手 Windows 版](https://github.com/jev-chat/jev-chat-windows)：聊天窗口旁挂的回复辅助，窗口截图 + 本地离线 OCR，3 条候选一键填入，发送永远手动。
-
-隐私政策见 [PRIVACY.md](PRIVACY.md)（说明读取了什么、发给谁、存在哪里、怎么删除）。
-
-## 友情链接
-
-<table>
-<tr>
-<td width="150" align="center"><a href="https://github.com/lanyijianke"><img src="docs/images/friends/lanyijianke.jpg" width="100" alt="蓝衣剑客" /></a><br/><b>蓝衣剑客</b></td>
-<td>资深 AI 专家、作家，火山引擎领航 KOL、阿里云 Agent 创客、WaytoAGI 核心创作者。深耕软件开发、系统架构与项目管理，著有《豆包高效办公》《Kimi 高效办公》等畅销 AI 书籍，获京东图书 2025 年度超级新书、2025 机工创作之星；曾参与多项 AI 领域标准及国家级报告起草，为数十家世界百强企业提供企业级 AI 咨询与实施。<br/><br/>GitHub：<a href="https://github.com/lanyijianke">@lanyijianke</a> · 邮箱：<a href="mailto:lanyijianke@outlook.com">lanyijianke@outlook.com</a></td>
-</tr>
-</table>
+本分支基于 [jev-chat/jev-chat-jarvis](https://github.com/jev-chat/jev-chat-jarvis) 二次开发。隐私与数据流说明见 [PRIVACY.md](PRIVACY.md)。
 
 ## 版权与许可
 
@@ -292,4 +225,3 @@ Copyright © 2026 Finderchangchang 与 jev-chat 贡献者。代码以 [MIT](LICE
 - 不要用「Jev 聊天助手」「jev-chat」名称或 chatjevs.com 域名暗示由原作者出品或背书。
 
 **隐私与免责声明**：触发分析时，聊天文字和启用的背景信息会发送到你自行配置的第三方模型服务商；截图仅在本机 OCR。请阅读[隐私政策](PRIVACY.md)以及所选服务商的政策，并遵守 QQ、X、飞书等软件的许可协议与当地法律法规。作者不对第三方服务商的数据处理行为或使用后果负责。
-

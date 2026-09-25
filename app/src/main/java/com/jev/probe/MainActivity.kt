@@ -244,6 +244,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val PRIVACY_URL = "https://chatjevs.com/privacy.html"
+        private const val PRIVACY_URL =
+            "https://github.com/uZIDADADA/jev-chat-jarvis/blob/dev/PRIVACY.md"
     }
 }
